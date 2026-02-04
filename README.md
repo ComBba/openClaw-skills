@@ -11,8 +11,9 @@
 
 ## 포함된 스킬
 
-### 🛡️ 개발 품질
-- **vibe-guard**: AI 코딩 도구 사용 시 품질 유지 가이드 (Anti-Vibe Coding) 🆕
+### 🛡️ 개발 품질 & 보안
+- **vibe-guard**: AI 코딩 도구 사용 시 품질 유지 가이드 (Anti-Vibe Coding)
+- **trivy-security**: 종합 보안 스캐너 (컨테이너, 코드, K8s, 클라우드) 🆕
 
 ### 💻 언어별 최신 버전
 - **ruby-4-0**: Ruby 4.0.1+ (Ractor 2.0, YJIT)
@@ -37,5 +38,6 @@
 
 ## 최근 업데이트
 - **2026-02-04 (저녁)**: alisql 스킬 추가, vibe-guard에 "Hot Mess" 연구 기반 추론 제한 가이드 추가
+- **2026-02-04**: trivy-security 스킬 추가 (종합 보안 스캐너)
 - **2026-02-04**: vibe-guard 스킬 추가 (AI 코딩 품질 가이드)
 - **2026-02-03**: Agent Skills 표준 호환성 확보
