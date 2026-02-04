@@ -133,6 +133,8 @@ GROUP BY DATE(created_at);
 ```python
 import mysql.connector
 import openai
+import os
+import json
 
 # AliSQL 연결
 conn = mysql.connector.connect(
@@ -152,20 +154,22 @@ def search_similar(query: str, top_k: int = 5):
     cursor = conn.cursor()
     cursor.execute("""
         SELECT content, 
-               VECTOR_COSINE_DISTANCE(embedding, %s) as distance
+               VECTOR_COSINE_DISTANCE(embedding, VECTOR_FROM_JSON(%s)) as distance
         FROM documents
         ORDER BY distance
         LIMIT %s
-    """, (embedding, top_k))
+    """, (json.dumps(embedding), top_k))
     
     return cursor.fetchall()
 
 # RAG 파이프라인
-context = search_similar("OpenClaw 설정 방법")
+similar_docs = search_similar("OpenClaw 설정 방법")
+# 검색 결과를 LLM이 이해하기 쉬운 형태로 가공합니다.
+context = "\n".join([f"- {doc[0]}" for doc in similar_docs])
 response = openai.chat.completions.create(
     model="gpt-4",
     messages=[
-        {"role": "system", "content": f"컨텍스트: {context}"},
+        {"role": "system", "content": f"다음 컨텍스트를 참고하여 사용자의 질문에 답변하세요:\n\n{context}"},
         {"role": "user", "content": "OpenClaw 설정 방법 알려줘"}
     ]
 )
@@ -182,7 +186,7 @@ response = openai.chat.completions.create(
 -- ef_construction: 인덱스 생성 시 탐색 폭 (높을수록 정확) 기본값: 200
 -- ef_search: 검색 시 탐색 폭 기본값: 50
 
-CREATE VECTOR INDEX idx ON table(col) USING HNSW 
+CREATE VECTOR INDEX idx ON embeddings(embedding) USING HNSW 
     WITH (m=32, ef_construction=400);
 
 -- 검색 시 정확도/속도 조절
