@@ -1,3 +1,11 @@
+---
+name: claude-code-local-fallback
+description: Claude Code 쿼터 소진 시 LM Studio/Ollama로 로컬 모델 폴백 설정.
+emoji: 💻
+requires:
+  - LM Studio 또는 Ollama
+---
+
 # Claude Code 로컬 모델 폴백
 
 쿼터 소진 시 로컬 오픈소스 모델로 Claude Code 계속 사용하기.
