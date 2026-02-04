@@ -66,7 +66,7 @@ sh build.sh -t release -d /usr/local/alisql
 # Docker (권장)
 docker run -d \
   --name alisql \
-  -e MYSQL_ROOT_PASSWORD=secret \
+  -e MYSQL_ROOT_PASSWORD=<your-strong-password> \
   -p 3306:3306 \
   alibaba/alisql:8.0.44
 ```
