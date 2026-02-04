@@ -138,7 +138,7 @@ import openai
 conn = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='secret',
+    password=os.environ.get('DB_PASSWORD'), # 환경 변수에서 비밀번호를 가져오세요.
     database='rag_db'
 )
 
