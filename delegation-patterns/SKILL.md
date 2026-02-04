@@ -1,3 +1,10 @@
+---
+name: delegation-patterns
+description: 디렉터 에이전트가 서브에이전트에게 작업을 위임하는 패턴과 템플릿.
+emoji: 🎯
+requires: []
+---
+
 # delegation-patterns (스킬)
 
 정민(디렉터)이 서브에이전트(직원)들에게 작업을 **효율적으로 위임하고**, 결과를 **일관되게 회수·검증**하기 위한 실행 패턴 모음.
