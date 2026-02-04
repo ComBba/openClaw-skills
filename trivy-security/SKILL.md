@@ -1,12 +1,12 @@
-# Trivy Security Scanning 🛡️
-
-```yaml
+---
 name: trivy-security
 description: Comprehensive security scanner for containers, code, and cloud
 version: 0.60.0
 tags: [security, scanning, containers, vulnerabilities, secrets, sbom]
 author: ComBbaJunior
-```
+---
+
+# Trivy Security Scanning 🛡️
 
 ## Overview
 
@@ -83,8 +83,9 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.20.0
         with:
+          trivy-version: '0.60.0'
           scan-type: 'fs'
           scan-ref: '.'
           scanners: 'vuln,secret,misconfig'
