@@ -1,3 +1,11 @@
+---
+name: voxtral-transcribe
+description: Mistral AI Voxtral로 음성을 텍스트로 변환. 13개 언어 지원, sub-200ms 실시간 처리.
+emoji: 🎤
+requires:
+  - curl 또는 mistral SDK
+---
+
 # Voxtral Transcribe - Mistral AI 음성인식 스킬
 
 Mistral AI의 Voxtral Transcribe 2를 활용한 고품질 음성-텍스트 변환.
