@@ -60,11 +60,11 @@ brew install --cask lm-studio
 lms server start --port 1234
 
 # 새 터미널에서 환경변수 설정
-export ANTHROPIC_BASE_URL=http://localhost:1234
+export ANTHROPIC_BASE_URL=http://localhost:1234/v1
 export ANTHROPIC_AUTH_TOKEN=lmstudio
 
-# Claude Code 시작 (로컬 모델 사용)
-claude --model openai/gpt-oss-20b
+# Claude Code 시작 (로컬 모델 사용, "your-model-id"는 LM Studio에 로드된 모델 ID로 변경)
+claude --model your-model-id
 ```
 
 ### 4. 모델 확인/전환
@@ -95,9 +95,9 @@ make
 ./server -m ./models/your-model.gguf -c 32768 --port 1234
 
 # Claude Code 연결 (방법 1과 동일)
-export ANTHROPIC_BASE_URL=http://localhost:1234
+export ANTHROPIC_BASE_URL=http://localhost:1234/v1
 export ANTHROPIC_AUTH_TOKEN=llama
-claude --model openai/gpt-oss-20b
+claude --model your-model-id
 ```
 
 ### 참고
@@ -118,7 +118,7 @@ ollama pull qwen2.5-coder:32b
 # OpenAI 호환 엔드포인트 사용
 export ANTHROPIC_BASE_URL=http://localhost:11434/v1
 export ANTHROPIC_AUTH_TOKEN=ollama
-claude --model openai/qwen2.5-coder:32b
+claude --model qwen2.5-coder:32b
 ```
 
 ## ⚠️ 주의사항
@@ -153,7 +153,7 @@ curl http://localhost:1234/v1/models
 
 # 포트 충돌 시 다른 포트 사용
 lms server start --port 8080
-export ANTHROPIC_BASE_URL=http://localhost:8080
+export ANTHROPIC_BASE_URL=http://localhost:8080/v1
 ```
 
 ### 메모리 부족
@@ -176,7 +176,7 @@ export ANTHROPIC_BASE_URL=http://localhost:8080
 # ~/.zshrc 또는 ~/.bashrc에 추가
 
 # 로컬 모델로 Claude Code 시작
-alias claude-local='ANTHROPIC_BASE_URL=http://localhost:1234 ANTHROPIC_AUTH_TOKEN=lmstudio claude --model openai/gpt-oss-20b'
+alias claude-local='ANTHROPIC_BASE_URL=http://localhost:1234/v1 ANTHROPIC_AUTH_TOKEN=lmstudio claude --model your-model-id'
 
 # LM Studio 서버 시작
 alias lms-start='lms server start --port 1234'
