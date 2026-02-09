@@ -40,7 +40,7 @@ pip install mistralai
 ```python
 from mistralai import Mistral
 
-client = Mistral(api_key="your-api-key")
+client = Mistral()  # MISTRAL_API_KEY 환경변수에서 자동 로드
 
 # 트랜스크립션 (파일 객체 직접 전달 - 대용량 파일에 효율적)
 with open("audio.mp3", "rb") as audio_file:
@@ -77,12 +77,12 @@ print(response.text)
 
 ### 1. 화자 분리 (Diarization)
 ```python
-response = client.audio.transcriptions.create(
-    model="voxtral-mini-transcribe-v2",
-    file_data=audio_data,
-    file_name="meeting.mp3",
-    diarization=True
-)
+with open("meeting.mp3", "rb") as audio_file:
+    response = client.audio.transcriptions.create(
+        model="voxtral-mini-transcribe-v2",
+        file=audio_file,
+        diarization=True
+    )
 
 for segment in response.segments:
     print(f"[Speaker {segment.speaker}] {segment.text}")
@@ -91,22 +91,22 @@ for segment in response.segments:
 ### 2. 컨텍스트 바이어싱
 고유명사, 기술 용어 교정:
 ```python
-response = client.audio.transcriptions.create(
-    model="voxtral-mini-transcribe-v2",
-    file_data=audio_data,
-    file_name="tech-talk.mp3",
-    context_bias=["OpenClaw", "Vibelingo", "ComBba", "Mistral AI"]  # 최대 100개
-)
+with open("tech-talk.mp3", "rb") as audio_file:
+    response = client.audio.transcriptions.create(
+        model="voxtral-mini-transcribe-v2",
+        file=audio_file,
+        context_bias=["OpenClaw", "Vibelingo", "ComBba", "Mistral AI"]  # 최대 100개
+    )
 ```
 
 ### 3. 단어별 타임스탬프
 ```python
-response = client.audio.transcriptions.create(
-    model="voxtral-mini-transcribe-v2",
-    file_data=audio_data,
-    file_name="podcast.mp3",
-    timestamp_granularity="word"
-)
+with open("podcast.mp3", "rb") as audio_file:
+    response = client.audio.transcriptions.create(
+        model="voxtral-mini-transcribe-v2",
+        file=audio_file,
+        timestamp_granularity="word"
+    )
 
 for word in response.words:
     print(f"[{word.start:.2f}-{word.end:.2f}] {word.text}")
@@ -117,7 +117,7 @@ for word in response.words:
 import asyncio
 from mistralai import Mistral
 
-client = Mistral(api_key="your-api-key")
+client = Mistral()  # MISTRAL_API_KEY 환경변수에서 자동 로드
 
 async def stream_transcription():
     # audio_source는 오디오 청크(bytes)를 생성하는 비동기 반복자(async iterator)입니다.
