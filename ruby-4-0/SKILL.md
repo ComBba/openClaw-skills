@@ -218,7 +218,7 @@ class Config
   end
   
   # 민감 정보 숨기기
-  private def instance_variables_to_inspect
+  protected def instance_variables_to_inspect
     [:@host]  # @password 제외
   end
 end
