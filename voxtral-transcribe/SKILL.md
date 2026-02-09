@@ -39,20 +39,15 @@ pip install mistralai
 ### 기본 사용
 ```python
 from mistralai import Mistral
-import base64
 
 client = Mistral(api_key="your-api-key")
 
-# 파일 업로드
-with open("audio.mp3", "rb") as f:
-    audio_data = base64.b64encode(f.read()).decode()
-
-# 트랜스크립션
-response = client.audio.transcriptions.create(
-    model="voxtral-mini-transcribe-v2",
-    file_data=audio_data,
-    file_name="audio.mp3"
-)
+# 트랜스크립션 (파일 객체 직접 전달 - 대용량 파일에 효율적)
+with open("audio.mp3", "rb") as audio_file:
+    response = client.audio.transcriptions.create(
+        model="voxtral-mini-transcribe-v2",
+        file=audio_file
+    )
 print(response.text)
 ```
 
@@ -120,13 +115,25 @@ for word in response.words:
 ### 4. 실시간 스트리밍
 ```python
 import asyncio
+from mistralai import Mistral
+
+client = Mistral(api_key="your-api-key")
 
 async def stream_transcription():
+    # audio_source는 오디오 청크(bytes)를 생성하는 비동기 반복자(async iterator)입니다.
+    # 아래는 파일에서 읽는 예시입니다.
+    async def audio_source_from_file(file_path):
+        # 실제 사용 시에는 실시간 오디오 스트림에 맞게 구현해야 합니다.
+        with open(file_path, "rb") as f:
+            while chunk := f.read(4096):
+                yield chunk
+                await asyncio.sleep(0.1)  # 실시간 스트림 시뮬레이션
+
     async with client.audio.transcriptions.stream(
         model="voxtral-realtime",
         language="ko"
     ) as stream:
-        async for chunk in audio_source:
+        async for chunk in audio_source_from_file("audio.wav"):
             await stream.send(chunk)
             result = await stream.receive()
             if result.text:
@@ -206,6 +213,7 @@ vllm serve mistralai/Voxtral-Mini-4B-Realtime-2602 --port 8000
 ```python
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor
 import torch
+import librosa  # pip install librosa
 
 model = AutoModelForSpeechSeq2Seq.from_pretrained(
     "mistralai/Voxtral-Mini-4B-Realtime-2602",
@@ -214,10 +222,14 @@ model = AutoModelForSpeechSeq2Seq.from_pretrained(
 )
 processor = AutoProcessor.from_pretrained("mistralai/Voxtral-Mini-4B-Realtime-2602")
 
-# 추론
+# 오디오 파일 로드 (librosa 사용)
+audio_array, _ = librosa.load("audio.wav", sr=16000)
+
+# 추론 (device_map="auto"로 지정된 장치로 입력 전송)
 inputs = processor(audio_array, sampling_rate=16000, return_tensors="pt")
-generated_ids = model.generate(**inputs.to("cuda"))
-transcription = processor.batch_decode(generated_ids, skip_special_tokens=True)
+generated_ids = model.generate(**inputs.to(model.device))
+transcription = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+print(transcription)
 ```
 
 ## 🆚 경쟁 서비스 비교
