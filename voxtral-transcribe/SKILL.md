@@ -1,3 +1,11 @@
+---
+name: voxtral-transcribe
+description: Mistral AI Voxtral로 음성을 텍스트로 변환. 13개 언어 지원, sub-200ms 실시간 처리.
+emoji: 🎤
+requires:
+  - curl 또는 mistral SDK
+---
+
 # Voxtral Transcribe - Mistral AI 음성인식 스킬
 
 Mistral AI의 Voxtral Transcribe 2를 활용한 고품질 음성-텍스트 변환.
@@ -31,20 +39,15 @@ pip install mistralai
 ### 기본 사용
 ```python
 from mistralai import Mistral
-import base64
 
 client = Mistral()  # MISTRAL_API_KEY 환경변수에서 자동 로드
 
-# 파일 업로드
-with open("audio.mp3", "rb") as f:
-    audio_data = base64.b64encode(f.read()).decode()
-
-# 트랜스크립션
-response = client.audio.transcriptions.create(
-    model="voxtral-mini-transcribe-v2",
-    file_data=audio_data,
-    file_name="audio.mp3"
-)
+# 트랜스크립션 (파일 객체 직접 전달 - 대용량 파일에 효율적)
+with open("audio.mp3", "rb") as audio_file:
+    response = client.audio.transcriptions.create(
+        model="voxtral-mini-transcribe-v2",
+        file=audio_file
+    )
 print(response.text)
 ```
 
@@ -74,12 +77,12 @@ print(response.text)
 
 ### 1. 화자 분리 (Diarization)
 ```python
-response = client.audio.transcriptions.create(
-    model="voxtral-mini-transcribe-v2",
-    file_data=audio_data,
-    file_name="meeting.mp3",
-    diarization=True
-)
+with open("meeting.mp3", "rb") as audio_file:
+    response = client.audio.transcriptions.create(
+        model="voxtral-mini-transcribe-v2",
+        file=audio_file,
+        diarization=True
+    )
 
 for segment in response.segments:
     print(f"[Speaker {segment.speaker}] {segment.text}")
@@ -88,22 +91,22 @@ for segment in response.segments:
 ### 2. 컨텍스트 바이어싱
 고유명사, 기술 용어 교정:
 ```python
-response = client.audio.transcriptions.create(
-    model="voxtral-mini-transcribe-v2",
-    file_data=audio_data,
-    file_name="tech-talk.mp3",
-    context_bias=["OpenClaw", "Vibelingo", "ComBba", "Mistral AI"]  # 최대 100개
-)
+with open("tech-talk.mp3", "rb") as audio_file:
+    response = client.audio.transcriptions.create(
+        model="voxtral-mini-transcribe-v2",
+        file=audio_file,
+        context_bias=["OpenClaw", "Vibelingo", "ComBba", "Mistral AI"]  # 최대 100개
+    )
 ```
 
 ### 3. 단어별 타임스탬프
 ```python
-response = client.audio.transcriptions.create(
-    model="voxtral-mini-transcribe-v2",
-    file_data=audio_data,
-    file_name="podcast.mp3",
-    timestamp_granularity="word"
-)
+with open("podcast.mp3", "rb") as audio_file:
+    response = client.audio.transcriptions.create(
+        model="voxtral-mini-transcribe-v2",
+        file=audio_file,
+        timestamp_granularity="word"
+    )
 
 for word in response.words:
     print(f"[{word.start:.2f}-{word.end:.2f}] {word.text}")
@@ -112,13 +115,25 @@ for word in response.words:
 ### 4. 실시간 스트리밍
 ```python
 import asyncio
+from mistralai import Mistral
+
+client = Mistral()  # MISTRAL_API_KEY 환경변수에서 자동 로드
 
 async def stream_transcription():
+    # audio_source는 오디오 청크(bytes)를 생성하는 비동기 반복자(async iterator)입니다.
+    # 아래는 파일에서 읽는 예시입니다.
+    async def audio_source_from_file(file_path):
+        # 실제 사용 시에는 실시간 오디오 스트림에 맞게 구현해야 합니다.
+        with open(file_path, "rb") as f:
+            while chunk := f.read(4096):
+                yield chunk
+                await asyncio.sleep(0.1)  # 실시간 스트림 시뮬레이션
+
     async with client.audio.transcriptions.stream(
         model="voxtral-realtime",
         language="ko"
     ) as stream:
-        async for chunk in audio_source:
+        async for chunk in audio_source_from_file("audio.wav"):
             await stream.send(chunk)
             result = await stream.receive()
             if result.text:
@@ -198,6 +213,7 @@ vllm serve mistralai/Voxtral-Mini-4B-Realtime-2602 --port 8000
 ```python
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor
 import torch
+import librosa  # pip install librosa
 
 model = AutoModelForSpeechSeq2Seq.from_pretrained(
     "mistralai/Voxtral-Mini-4B-Realtime-2602",
@@ -206,10 +222,14 @@ model = AutoModelForSpeechSeq2Seq.from_pretrained(
 )
 processor = AutoProcessor.from_pretrained("mistralai/Voxtral-Mini-4B-Realtime-2602")
 
-# 추론
+# 오디오 파일 로드 (librosa 사용)
+audio_array, _ = librosa.load("audio.wav", sr=16000)
+
+# 추론 (device_map="auto"로 지정된 장치로 입력 전송)
 inputs = processor(audio_array, sampling_rate=16000, return_tensors="pt")
-generated_ids = model.generate(**inputs.to("cuda"))
-transcription = processor.batch_decode(generated_ids, skip_special_tokens=True)
+generated_ids = model.generate(**inputs.to(model.device))
+transcription = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+print(transcription)
 ```
 
 ## 🆚 경쟁 서비스 비교
