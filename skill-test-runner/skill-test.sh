@@ -24,7 +24,7 @@ add_check() {
     fi
     
     # Escape special characters for JSON
-    local escaped_message=$(echo "$message" | sed 's/"/\\"/g' | tr -d '\n')
+    local escaped_message=$(echo "$message" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' | tr -d '\n')
     
     local check="{\"name\": \"$name\", \"status\": \"$status\", \"message\": \"$escaped_message\"}"
     if [ "$checks_json" == "[]" ]; then
@@ -101,14 +101,12 @@ if [ -f "$SKILL_MD" ]; then
         fi
     fi
     
-    # Code block count
-    code_blocks=$(grep -c "^ \` \` \` " "$SKILL_MD" | tr -d ' ' || echo 0)
-    # Note: the above grep is tricky due to backticks.
+    # Code block count (should be even - opening and closing pairs)
     code_blocks=$(grep -c '```' "$SKILL_MD")
-    if [ "$code_blocks" -gt 0 ]; then
-        add_check "Code blocks" "pass" "Found $code_blocks code segments"
+    if [ "$code_blocks" -gt 0 ] && [ $((code_blocks % 2)) -eq 0 ]; then
+        add_check "Code blocks" "pass" "Found $((code_blocks / 2)) code segments"
     else
-        add_check "Code blocks" "fail" "No code blocks found in SKILL.md"
+        add_check "Code blocks" "fail" "No code blocks found or they are not properly paired in SKILL.md"
     fi
 fi
 

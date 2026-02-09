@@ -33,7 +33,7 @@ pip install mistralai
 from mistralai import Mistral
 import base64
 
-client = Mistral(api_key="your-api-key")
+client = Mistral()  # MISTRAL_API_KEY 환경변수에서 자동 로드
 
 # 파일 업로드
 with open("audio.mp3", "rb") as f:
