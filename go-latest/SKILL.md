@@ -5,6 +5,16 @@ description: Best practices for Go 1.25+. Focuses on high-performance JSON proce
 
 # Go Latest (1.25+)
 
+## 🚨 Security Update (2026-02-05)
+Go 1.25.7 and Go 1.24.13 released with security patches for go command and toolchain.
+**Update immediately:** `brew upgrade go` or `go install golang.org/dl/go1.25.7@latest`
+
+## 🆕 Go 1.25 Highlights
+- **Container-aware GOMAXPROCS**: Automatic cgroup CPU limit detection
+- **Green Tea GC**: `GOEXPERIMENT=greenteagc` for 10-40% GC overhead reduction
+- **encoding/json/v2**: 2-3x faster JSON decoding (experimental)
+- **Trace Flight Recorder**: Lightweight runtime trace capture
+
 ## Key Features & Best Practices
 
 ### 1. JSON Processing (json/v2)
