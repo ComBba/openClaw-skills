@@ -1,9 +1,29 @@
 ---
 name: go-latest
-description: Best practices for Go 1.25+. Focuses on high-performance JSON processing, structured logging, and modern concurrency patterns.
+description: Best practices for Go 1.24+. Focuses on high-performance JSON processing, structured logging, and modern concurrency patterns.
 ---
 
-# Go Latest (1.25+)
+# Go Latest (1.24+)
+
+## 🆕 Go 1.24 Released! (Feb 11, 2025) 🔥
+
+🎉 **Go 1.24 공식 출시!** (2025년 2월 11일)
+
+### Major Features
+- **Generic Type Aliases**: 타입 별칭도 제네릭 파라미터 사용 가능
+- **Performance**: CPU 오버헤드 2-3% 감소 (Swiss Tables 기반 새 map)
+- **Tool Directives**: `go get -tool`로 도구 의존성 관리
+- **testing.B.Loop**: 더 빠르고 안전한 벤치마크
+- **FIPS 140-3**: 표준 라이브러리에 준수 메커니즘 추가
+
+### Upgrade
+```bash
+brew update && brew upgrade go
+# 또는
+go install golang.org/dl/go1.24@latest && go1.24 download
+```
+
+---
 
 ## 🚨 Security Update (2026-02-05)
 Go 1.25.7 and Go 1.24.13 released with security patches for go command and toolchain.
