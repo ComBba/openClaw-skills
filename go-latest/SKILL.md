@@ -7,11 +7,15 @@ description: Best practices for Go 1.25+. Focuses on high-performance JSON proce
 
 ## 🚨 Security Update (2026-02-13)
 - **Go 1.26.0** released (2026-02-10).
-- Recent minors include **Go 1.25.7** (2026-02-04) with security fixes.
+- Latest security minors (2026-02-04):
+  - **Go 1.25.7** — security fixes to **go command** + **crypto/tls** (plus bug fixes).
+  - **Go 1.24.13** — security fixes to **go command** + **crypto/tls** (plus bug fixes).
+  - Source: https://go.dev/doc/devel/release
 
 **Update immediately:**
 - Homebrew: `brew upgrade go`
-- Pin toolchain: `go install golang.org/dl/go1.26.0@latest` (or `go1.26.0 download`)
+- Pin toolchain (example): `go install golang.org/dl/go1.26.0@latest` (or `go1.26.0 download`)
+- If you’re pinned to Go 1.24.x for compatibility, upgrade to `go1.24.13`. 
 
 ## 🆕 Go 1.25 Highlights
 - **Container-aware GOMAXPROCS**: Automatic cgroup CPU limit detection
