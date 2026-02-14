@@ -21,6 +21,7 @@
 - **go-latest**: Go 1.25+ (json/v2, Green Tea GC)
 
 ### 🔧 프레임워크 및 데이터베이스
+- **nextjs-14**: Next.js 14 (stable) + RSC 보안 패치 레벨 가이드
 - **nextjs-15**: Next.js 15 (React 19, Async Request APIs)
 - **nextjs-16**: Next.js 16 Future-ready (PPR, RSC-first)
 - **rails-latest**: Rails 8.0+ (Solid Stack, Kamal 2)
@@ -37,6 +38,7 @@
 4. **Agent Skills 호환**: 모든 스킬은 YAML frontmatter를 포함하여 표준 호환성을 유지합니다.
 
 ## 최근 업데이트
+- **2026-02-15**: nextjs-14 스킬 추가 (RSC DoS/Source exposure 패치 레벨: 14.2.35)
 - **2026-02-04 (저녁)**: alisql 스킬 추가, vibe-guard에 "Hot Mess" 연구 기반 추론 제한 가이드 추가
 - **2026-02-04**: trivy-security 스킬 추가 (종합 보안 스캐너)
 - **2026-02-04**: vibe-guard 스킬 추가 (AI 코딩 품질 가이드)
