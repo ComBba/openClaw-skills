@@ -17,9 +17,14 @@ description: Best practices for Next.js 15. Focuses on Async Request APIs, React
 - **Default to Uncached**: GET handlers are no longer cached by default. Use `force-static` if needed.
 
 ## Security (App Router / RSC)
-- **React2Shell RCE (CVE-2025-55182 / Next.js tracking CVE-2025-66478)**: affects **App Router** on certain Next.js 15/16 lines. Upgrade immediately to a patched Next.js version for your line.
-- **RSC DoS + source exposure (CVE-2025-55184 / CVE-2025-55183; complete DoS fix: CVE-2025-67779)**: affects **App Router endpoints**; upgrade to the latest patched versions (some initial fixes were incomplete).
-- **After patching**: rotate secrets if your app was exposed while unpatched; ensure secrets are not inlined into server function code (use runtime env vars).
+- **React2Shell RCE (CVE-2025-55182 / Next.js tracking CVE-2025-66478)**: affects **App Router** on Next.js **15.x/16.x** and some canary lines. Upgrade immediately.
+  - Fixed versions (per advisory): **15.0.5 / 15.1.9 / 15.2.6 / 15.3.6 / 15.4.8 / 15.5.7** (and canary **15.6.0-canary.58**)
+  - If you were online unpatched around the initial disclosure window: **rotate secrets** after patch + redeploy.
+- **RSC DoS + source exposure (CVE-2025-55184 / CVE-2025-55183; complete DoS fix: CVE-2025-67779)**: affects **App Router endpoints**. Some initial fixes were incomplete; upgrade to the *latest* patched versions.
+  - Fixed versions (per advisory): **15.0.7 / 15.1.11 / 15.2.8 / 15.3.8 / 15.4.10 / 15.5.9**
+- **Operational shortcuts**:
+  - Use `npx fix-react2shell-next` for deterministic bumps.
+  - Keep secrets out of compiled Server Functions (prefer runtime env vars).
 
 References:
 - https://nextjs.org/blog/CVE-2025-66478
