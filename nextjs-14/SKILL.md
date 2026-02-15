@@ -20,6 +20,7 @@ React Server Components protocol vulnerabilities impacted multiple Next.js lines
 ### RSC DoS + source exposure (follow-up advisories)
 - **DoS**: CVE-2025-55184 (initial fix was incomplete; complete fix tracked as **CVE-2025-67779**)
 - **Source code exposure**: CVE-2025-55183
+- **Additional DoS (Jan 26, 2026)**: **CVE-2026-23864** (React RSC protocol)
 - Affected: **Next.js >= 13.3** (App Router/RSC)
 - **Patched version for Next.js 14.x**: upgrade to **14.2.35**
 
@@ -35,6 +36,7 @@ References:
 - https://nextjs.org/blog/security-update-2025-12-11
 - https://nextjs.org/blog/CVE-2025-66478
 - https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components
+- https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components (updated Jan 26, 2026)
 
 ## Security watchlist (ecosystem)
 - **MDX rendering (next-mdx-remote, etc.)**: treat *untrusted* MDX as code. Prefer disabling JS/expressions unless you fully trust the content source, and sandbox/serialize carefully.
