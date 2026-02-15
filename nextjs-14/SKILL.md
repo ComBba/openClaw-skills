@@ -35,3 +35,7 @@ References:
 - https://nextjs.org/blog/security-update-2025-12-11
 - https://nextjs.org/blog/CVE-2025-66478
 - https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components
+
+## Security watchlist (ecosystem)
+- **MDX rendering (next-mdx-remote, etc.)**: treat *untrusted* MDX as code. Prefer disabling JS/expressions unless you fully trust the content source, and sandbox/serialize carefully.
+  - Note: there are reports (Feb 2026) of SSR arbitrary code execution risk when evaluating unsanitized MDX/expressions. Please verify against the package’s **GitHub Security Advisories / npm advisories** before upgrading/pinning.
